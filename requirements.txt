@@ -1,0 +1,13 @@
+# Install PyTorch and Torchvision as a compatible pair for your OS/GPU first:
+# https://pytorch.org/get-started/locally/
+numpy>=1.24
+Pillow>=10.0
+scikit-learn>=1.3
+joblib>=1.3
+torch>=2.1
+
+# Optional components:
+torchvision>=0.16
+fastapi>=0.110
+uvicorn[standard]>=0.27
+openai>=1.40
