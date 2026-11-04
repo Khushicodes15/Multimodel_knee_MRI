@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RadVision ACL — Knee MRI Clinical Decision Support</title>
+  <link rel="stylesheet" href="/static/app.css?v=20261104_pacs2">
+</head>
+<body>
+
+  <!-- Top PACS Bar -->
+  <header class="pacs-header">
+    <div class="header-left">
+      <a href="#home" class="brand-link" id="nav-brand">
+        <span class="brand-title">RadVision ACL</span>
+        <span class="brand-sub">PACS Workstation</span>
+      </a>
+      <nav class="nav-tabs" aria-label="Workstation Navigation">
+        <a href="#home" class="nav-tab" id="chip-home">Overview</a>
+        <a href="#workstation" class="nav-tab active" id="chip-workstation">Workstation</a>
+        <a href="#results" class="nav-tab" id="chip-results">Results & Report</a>
+      </nav>
+    </div>
+
+    <div class="header-right">
+      <span class="research-badge">Research prototype — not for primary diagnosis</span>
+      <div class="status-indicator" id="backend-status-indicator" title="Backend health">
+        <span class="status-dot" id="status-dot"></span>
+        <span class="status-label" id="status-text">Connecting...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Server Missing Requirements Alert -->
+  <div class="server-banner hidden" id="server-error-banner" role="alert">
+    <span id="server-error-msg">Server notice: Models or data missing.</span>
+    <button class="btn-retry" id="btn-banner-retry" type="button">Retry</button>
+  </div>
+
+  <!-- =========================================================================
+       VIEW 1: LANDING PAGE (#home)
+       ========================================================================= -->
+  <section id="view-home" class="page-view">
+    <div class="landing-layout">
+
+      <header class="editorial-header">
+        <h1 class="editorial-title">Knee MRI ACL Decision Support Framework</h1>
+        <p class="editorial-lead">
+          Automated multi-architecture deep learning system for sagittal knee MRI classification across healthy, partial tear, and complete rupture cases. Incorporates deterministic volume slice sampling, cross-model consensus, and genuine Grad-CAM interpretability grounded in radiologic features.
+        </p>
+        <div class="editorial-actions">
+          <a href="#workstation" class="btn-primary" id="btn-cta-start">Start analysis</a>
+        </div>
+      </header>
+
+      <!-- How it Works Flow -->
+      <section class="section-block">
+        <h2 class="section-heading">Diagnostic pipeline</h2>
+        <div class="pipeline-strip">
+          <div class="pipeline-step">
+            <span class="step-num">01</span>
+            <span class="step-name">Volume input</span>
+            <span class="step-desc">Sagittal .pck array (27-36 slices)</span>
+          </div>
+          <span class="step-arrow">→</span>
+          <div class="pipeline-step">
+            <span class="step-num">02</span>
+            <span class="step-name">Slice sampling</span>
+            <span class="step-desc">16 deterministic central slices</span>
+          </div>
+          <span class="step-arrow">→</span>
+          <div class="pipeline-step">
+            <span class="step-num">03</span>
+            <span class="step-name">3 CNN backbones</span>
+            <span class="step-desc">ResNet-18, DenseNet-121, EfficientNet-B0</span>
+          </div>
+          <span class="step-arrow">→</span>
+          <div class="pipeline-step">
+            <span class="step-num">04</span>
+            <span class="step-name">Consensus & Grad-CAM</span>
+            <span class="step-desc">Mean logit pooling & real gradient localization</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Evaluated Architectures (One line each) -->
+      <section class="section-block">
+        <h2 class="section-heading">Evaluated models & training controls</h2>
+        <ul class="models-list">
+          <li><strong>ResNet-18:</strong> 18-layer residual network fine-tuned on single-channel knee MRI slices with ImageNet initialization and weighted cross-entropy. <em>(Note: The presentation deck listed ResNet-50; the actual trained checkpoint deployed in this repository is ResNet-18.)</em></li>
+          <li><strong>DenseNet-121:</strong> Dense feature connectivity maximizing gradient flow across deep convolutional blocks, specialized for subtle interstitial tear patterns.</li>
+          <li><strong>EfficientNet-B0:</strong> Compound depth/width scaled convolutional architecture providing compact, high-precision spatial representation.</li>
+        </ul>
+
+        <div class="training-methods-box">
+          <span class="box-title">Verified training controls used in training code:</span>
+          <ul class="controls-list">
+            <li><strong>Dropout:</strong> 0.35 applied before linear classification heads.</li>
+            <li><strong>Weight decay:</strong> 1e-4 with Adam optimizer.</li>
+            <li><strong>Batch normalization:</strong> Included natively within convolutional backbones.</li>
+            <li><strong>Early stopping:</strong> 7-epoch patience monitoring validation loss and macro-F1.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Evaluation Benchmarks Table -->
+      <section class="section-block">
+        <h2 class="section-heading">Evaluation benchmarks (held-out test set)</h2>
+        <div id="landing-benchmarks-container" class="benchmarks-wrapper">
+          <div class="loading-text">Loading benchmark metrics from disk...</div>
+        </div>
+        <p class="imbalance-note">
+          <strong>Note on class distribution:</strong> Overall test accuracy (87.1%) is substantially higher than balanced accuracy (65.2%) due to class imbalance in the KneeMRI dataset (predominance of healthy scans). Overall accuracy should not be read as 87% diagnostic reliability across all pathology classes; balanced accuracy and macro-F1 (0.673) reflect true multi-class performance.
+        </p>
+      </section>
+
+      <!-- Future Work -->
+      <section class="section-block">
+        <h2 class="section-heading">Planned components & future work</h2>
+        <p class="future-work-note">
+          <strong>Module 4 (Longitudinal Risk & Recovery):</strong> Planned sequence modelling component (LSTM/GRU); no real-world recovery prediction is claimed at this stage due to single-timepoint dataset constraints.
+        </p>
+      </section>
+
+      <!-- Research Disclaimer -->
+      <section class="section-block disclaimer-block">
+        <strong>Academic and research disclaimer:</strong> RadVision ACL is a university research prototype developed for neural network capstone evaluation. It does not constitute a primary diagnostic medical device and does not replace review by a board-certified radiologist or orthopedic specialist.
+      </section>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       VIEW 2: WORKSTATION (#workstation)
+       ========================================================================= -->
+  <section id="view-workstation" class="page-view active">
+    <div class="workstation-grid">
+
+      <!-- LEFT: PACS VIEWER COLUMN -->
+      <div class="viewer-column">
+        <div class="viewer-top-toolbar">
+          <div class="viewer-title-group">
+            <span class="viewer-label" id="viewer-scan-title">No study loaded</span>
+            <span class="viewer-sublabel" id="meta-volume-id">—</span>
+            <span class="viewer-sublabel" id="meta-roi-source"></span>
+          </div>
+
+          <div class="viewer-toolbar-controls">
+            <div class="segmented-control" role="radiogroup" aria-label="Display mode">
+              <button class="seg-btn active" id="btn-mode-slice" type="button" role="radio" aria-checked="true">Raw slice</button>
+              <button class="seg-btn" id="btn-mode-gradcam" type="button" role="radio" aria-checked="false">Grad-CAM</button>
+            </div>
+
+            <div class="gradcam-select-wrap">
+              <label for="gradcam-model-select">CAM model:</label>
+              <select id="gradcam-model-select" class="pacs-select" aria-label="Grad-CAM backbone selection">
+                <!-- Dynamically populated from active models -->
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Square PACS Stage -->
+        <div class="pacs-stage" id="viewport-screen">
+          <!-- Monospace PACS Corner Overlays -->
+          <div class="pacs-overlay pacs-overlay-tl" id="pacs-overlay-tl">STUDY: NONE</div>
+          <div class="pacs-overlay pacs-overlay-tr" id="pacs-overlay-tr">SL --/--</div>
+          <div class="pacs-overlay pacs-overlay-bl" id="pacs-overlay-bl">MODE: RAW</div>
+          <div class="pacs-overlay pacs-overlay-br" id="pacs-overlay-br">SAGITTAL T2</div>
+
+          <!-- ROI Bounding Box Overlay -->
+          <div class="pacs-roi-box hidden" id="pacs-roi-box" title="ROI bounding box"></div>
+
+          <!-- Empty State / Dropzone -->
+          <div class="stage-empty-state" id="viewport-empty-state">
+            <div class="empty-prompt">
+              <p class="empty-prompt-title">Select a test study or upload a volume</p>
+              <p class="empty-prompt-desc">Choose a study from the sidebar or select a volumetric .pck file (max 100MB).</p>
+              <div class="dropzone-area" id="file-dropzone" role="button" tabindex="0">
+                <input type="file" id="file-input" accept=".pck" style="display: none;" aria-hidden="true">
+                <button class="btn-secondary" id="btn-trigger-upload" type="button">Select .pck volume</button>
+                <span class="dropzone-note">or drag and drop file into this stage</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- MRI Slice Image (Auto-fit, no duotone/filters) -->
+          <img src="" alt="Knee MRI slice" class="slice-image hidden" id="mri-slice-img">
+        </div>
+
+        <!-- Module 2 Preprocessing Info Strip -->
+        <div class="preprocessing-strip" id="preprocessing-strip">
+          <span class="prep-item"><strong>ROI:</strong> <span id="prep-roi-source">—</span></span>
+          <span class="prep-item"><strong>Shape:</strong> <span id="prep-volume-shape">—</span></span>
+          <span class="prep-item"><strong>Slices:</strong> <span id="prep-slice-count">—</span></span>
+          <span class="prep-item"><strong>Plane:</strong> Sagittal T2</span>
+          <span class="prep-item"><strong>Norm:</strong> Percentile 1–99 (0–1)</span>
+        </div>
+
+        <!-- Scrubber Bar -->
+        <div class="pacs-scrubber-bar" id="viewer-controls" style="display: none;">
+          <button class="btn-step" id="btn-slice-prev" type="button" title="Previous slice (Left Arrow)">◀</button>
+          <input type="range" id="slice-scrubber" class="pacs-range" min="0" max="0" value="0" aria-label="Slice scrubber">
+          <button class="btn-step" id="btn-slice-next" type="button" title="Next slice (Right Arrow)">▶</button>
+          <span class="scrubber-counter" id="scrubber-readout">Slice 0 / 0</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: SIDEBAR (Pipeline Trigger & Studies) -->
+      <aside class="workstation-sidebar">
+
+        <!-- Diagnostic Pipeline Action -->
+        <div class="sidebar-section">
+          <h2 class="sidebar-heading">Diagnostic pipeline</h2>
+          <p class="sidebar-desc">
+            Load a test study or uploaded volume, then execute multi-architecture inference.
+          </p>
+          <button class="btn-primary btn-full" id="btn-execute-analysis" type="button" disabled>
+            <span id="btn-run-text">Run model analysis</span>
+          </button>
+        </div>
+
+        <hr class="sidebar-divider">
+
+        <!-- Available Test Studies -->
+        <div class="sidebar-section">
+          <div class="sidebar-header-row">
+            <h2 class="sidebar-heading">Test studies</h2>
+            <span class="studies-count" id="samples-count-lbl">6 available</span>
+          </div>
+          <div class="samples-grid" id="samples-grid-container">
+            <div class="loading-text">Loading test studies...</div>
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       VIEW 3: RESULTS & REPORT (#results)
+       ========================================================================= -->
+  <section id="view-results" class="page-view">
+    <div class="results-layout">
+
+      <header class="results-top-header">
+        <div>
+          <h1 class="results-title">Diagnostic findings & model consensus</h1>
+          <span class="results-study-lbl" id="results-study-id">No study analyzed</span>
+        </div>
+        <a href="#workstation" class="btn-secondary">Back to workstation</a>
+      </header>
+
+      <!-- Decision Support Summary Panel (Top) -->
+      <div class="decision-support-panel" id="decision-support-panel">
+        <div class="decision-headline-row">
+          <div class="decision-pred-group">
+            <span class="decision-label">Consensus Diagnosis:</span>
+            <span class="decision-pred-val" id="pred-class-headline">—</span>
+            <span class="decision-conf-val" id="pred-conf-lead">—</span>
+          </div>
+          <div class="decision-laterality-badge" id="decision-laterality-val">Laterality: —</div>
+        </div>
+
+        <div class="decision-sub-row">
+          <span class="gt-line hidden" id="ground-truth-chip">
+            <span class="gt-label">Ground truth:</span>
+            <strong id="gt-label-val">—</strong>
+          </span>
+          <span class="decision-consensus-tag" id="decision-consensus-tag">Consensus: Pending</span>
+        </div>
+
+        <!-- Five-Module Execution Tracking -->
+        <div class="modules-tracking-grid">
+          <div class="module-status-chip status-not-run" id="chip-mod1" title="Tabular model artifacts not available in build">
+            <span class="mod-dot"></span> Module 1 (Tabular): Not run
+          </div>
+          <div class="module-status-chip status-run" id="chip-mod2">
+            <span class="mod-dot"></span> Module 2 (Preprocessing): Run
+          </div>
+          <div class="module-status-chip status-run" id="chip-mod3">
+            <span class="mod-dot"></span> Module 3 (CNN Ensemble): Run
+          </div>
+          <div class="module-status-chip status-not-run" id="chip-mod4" title="Planned longitudinal component, no clinical claim">
+            <span class="mod-dot"></span> Module 4 (Longitudinal): Not run
+          </div>
+          <div class="module-status-chip status-run" id="chip-mod5">
+            <span class="mod-dot"></span> Module 5 (Grounded Report): Ready
+          </div>
+        </div>
+
+        <div class="decision-limitation-text">
+          <strong>Decision support notice:</strong> Academic research prototype output. Intended exclusively for educational evaluation. Not approved as a primary diagnostic device.
+        </div>
+      </div>
+
+      <!-- Class Probability Distribution (Flat neutral bars) -->
+      <section class="results-section">
+        <h2 class="section-heading">Class probability distribution</h2>
+        <div class="prob-table">
+
+          <div class="prob-row">
+            <div class="prob-meta">
+              <span class="prob-name">Healthy (Grade 0)</span>
+              <span class="prob-pct tabular-nums" id="prob-val-healthy">—</span>
+            </div>
+            <div class="prob-track">
+              <div class="prob-fill" id="prob-bar-healthy" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <div class="prob-row">
+            <div class="prob-meta">
+              <span class="prob-name">Partial tear (Grade 1/2)</span>
+              <span class="prob-pct tabular-nums" id="prob-val-partial">—</span>
+            </div>
+            <div class="prob-track">
+              <div class="prob-fill" id="prob-bar-partial" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <div class="prob-row">
+            <div class="prob-meta">
+              <span class="prob-name">Complete rupture (Grade 3)</span>
+              <span class="prob-pct tabular-nums" id="prob-val-rupture">—</span>
+            </div>
+            <div class="prob-track">
+              <div class="prob-fill" id="prob-bar-rupture" style="width: 0%;"></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Multi-Model Consensus Table -->
+      <section class="results-section">
+        <h2 class="section-heading">Multi-model consensus</h2>
+        <div class="consensus-table-wrap">
+          <table class="pacs-table" id="consensus-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Predicted class</th>
+                <th>Confidence</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="consensus-model-list">
+              <tr><td colspan="4" class="text-muted">No inference performed yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Muted Notes for Modules 1 & 4 -->
+        <div class="modules-status-notes">
+          <div class="module-muted-note">
+            <strong>Module 1 (ANN/MLP Tabular):</strong> Not available in this build. <em>(Requires clinical demographic/WOMAC covariates; no trained model or scaler artifact exists in module1_baseline/artifacts/.)</em>
+          </div>
+          <div class="module-muted-note">
+            <strong>Module 4 (LSTM/GRU Longitudinal Risk):</strong> Not available. <em>(Planned modelling component; no real-world ACL recovery prediction claimed.)</em>
+          </div>
+        </div>
+      </section>
+
+      <!-- Structured Clinical Report -->
+      <section class="results-section">
+        <div class="report-header-row">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <h2 class="section-heading" style="margin-bottom: 0;">Radiology summary</h2>
+            <!-- Mode Toggle: Template vs LLM -->
+            <div class="report-mode-toggle" role="radiogroup" aria-label="Report Generation Mode">
+              <button class="mode-btn active" id="btn-report-mode-template" type="button">Template</button>
+              <button class="mode-btn" id="btn-report-mode-llm" type="button" title="Generate with Google Gemini">LLM (Gemini)</button>
+            </div>
+          </div>
+
+          <div class="report-status-badges">
+            <span class="report-mode-indicator" id="report-mode-tag">Mode: Template</span>
+            <span class="grounding-badge passed" id="report-grounding-tag">Grounding: Verified</span>
+          </div>
+        </div>
+
+        <pre class="report-code-block" id="report-text-panel">Run analysis on a study to generate structured findings.</pre>
+
+        <div class="report-button-row">
+          <button class="btn-secondary" id="btn-generate-report" type="button" disabled>Re-generate summary</button>
+          <div class="btn-group">
+            <button class="btn-secondary" id="btn-copy-report" type="button" disabled>Copy</button>
+            <button class="btn-secondary" id="btn-download-report" type="button" disabled>Download .txt</button>
+          </div>
+        </div>
+
+        <div class="report-disclosure">
+          <strong>Privacy & LLM Notice:</strong> In LLM mode, only structured findings (no image pixels, no filenames beyond study ID) are processed by Google's Gemini API server-side. The integration code is isolated and can be swapped for a local open-weight model (e.g. Ollama/Mistral).
+        </div>
+      </section>
+
+    </div>
+  </section>
+
+  <!-- Compact Footer -->
+  <footer class="pacs-footer">
+    RadVision ACL • University research prototype • Academic evaluation only • Not approved for clinical use
+  </footer>
+
+  <script src="/static/app.js?v=20261104_pacs2"></script>
+</body>
+</html>

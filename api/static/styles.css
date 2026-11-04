@@ -1,0 +1,2 @@
+/* Re-export styles to match both styles.css and app.css */
+@import url('/static/app.css?v=20261104_pacs2');

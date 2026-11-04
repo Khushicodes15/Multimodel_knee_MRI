@@ -18,6 +18,15 @@ CLASS_NAMES = ("Healthy", "Partial tear", "Complete rupture")
 SPLIT_NAMES = {"train", "validation", "test"}
 
 
+def select_deterministic_slice_indices(n_slices: int, slices_per_volume: int) -> np.ndarray:
+    """Deterministic uniform slice sampling matching evaluation."""
+    n_selected = min(n_slices, slices_per_volume)
+    selected = np.unique(np.linspace(0, n_slices - 1, n_selected, dtype=int))
+    if len(selected) < slices_per_volume:
+        selected = np.resize(selected, slices_per_volume)
+    return selected
+
+
 def read_split(path: Path, volumes_dir: Path) -> list[dict[str, Any]]:
     """Read split manifest and enforce labels, paths, and exam-level isolation."""
     with path.open("r", newline="", encoding="utf-8-sig") as stream:
@@ -96,10 +105,7 @@ class MRIVolumes(Dataset):
         if self.split == "train":
             selected = np.random.randint(0, n_slices, size=self.slices_per_volume)
         else:
-            n_selected = min(n_slices, self.slices_per_volume)
-            selected = np.unique(np.linspace(0, n_slices - 1, n_selected, dtype=int))
-            if len(selected) < self.slices_per_volume:
-                selected = np.resize(selected, self.slices_per_volume)
+            selected = select_deterministic_slice_indices(n_slices, self.slices_per_volume)
         images = torch.from_numpy(volume_slices[selected].copy()).float().unsqueeze(1) / 255.0
         if self.split == "train" and self.augmentation:
             images = augment_intensity(images)
@@ -187,13 +193,19 @@ def predict_volumes(model: nn.Module, loader: Any, device: torch.device) -> tupl
     return truths, predictions, filenames, probabilities
 
 
-def metrics_for(truths: list[int], predictions: list[int]) -> dict[str, Any]:
-    from sklearn.metrics import accuracy_score, balanced_accuracy_score, classification_report, confusion_matrix, f1_score
+def metrics_for(truths: list[int], predictions: list[int], probabilities: list[list[float]] | None = None) -> dict[str, Any]:
+    from sklearn.metrics import accuracy_score, balanced_accuracy_score, classification_report, confusion_matrix, f1_score, roc_auc_score
 
-    return {
+    res: dict[str, Any] = {
         "accuracy": float(accuracy_score(truths, predictions)),
         "balanced_accuracy": float(balanced_accuracy_score(truths, predictions)),
         "macro_f1": float(f1_score(truths, predictions, average="macro", zero_division=0)),
         "confusion_matrix": confusion_matrix(truths, predictions, labels=[0, 1, 2]).tolist(),
         "per_class": classification_report(truths, predictions, labels=[0, 1, 2], target_names=CLASS_NAMES, output_dict=True, zero_division=0),
     }
+    if probabilities is not None:
+        try:
+            res["roc_auc_ovr_macro"] = float(roc_auc_score(truths, probabilities, multi_class="ovr", average="macro", labels=[0, 1, 2]))
+        except Exception:
+            res["roc_auc_ovr_macro"] = None
+    return res

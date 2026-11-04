@@ -1,0 +1,343 @@
+{
+  "test_volumes": 139,
+  "mlp": {
+    "accuracy": 0.6618705035971223,
+    "balanced_accuracy": 0.43089947089947095,
+    "macro_f1": 0.45090465090465087,
+    "confusion_matrix": [
+      [
+        83,
+        21,
+        1
+      ],
+      [
+        17,
+        7,
+        1
+      ],
+      [
+        5,
+        2,
+        2
+      ]
+    ],
+    "per_class": {
+      "Healthy": {
+        "precision": 0.7904761904761904,
+        "recall": 0.7904761904761904,
+        "f1-score": 0.7904761904761904,
+        "support": 105.0
+      },
+      "Partial tear": {
+        "precision": 0.23333333333333334,
+        "recall": 0.28,
+        "f1-score": 0.2545454545454545,
+        "support": 25.0
+      },
+      "Complete rupture": {
+        "precision": 0.5,
+        "recall": 0.2222222222222222,
+        "f1-score": 0.3076923076923077,
+        "support": 9.0
+      },
+      "accuracy": 0.6618705035971223,
+      "macro avg": {
+        "precision": 0.5079365079365079,
+        "recall": 0.43089947089947095,
+        "f1-score": 0.45090465090465087,
+        "support": 139.0
+      },
+      "weighted avg": {
+        "precision": 0.671462829736211,
+        "recall": 0.6618705035971223,
+        "f1-score": 0.6628263822508427,
+        "support": 139.0
+      }
+    },
+    "roc_auc_ovr_macro": 0.6560307757830977,
+    "validation": {
+      "accuracy": 0.6258992805755396,
+      "balanced_accuracy": 0.31477411477411477,
+      "macro_f1": 0.30916362371761436,
+      "confusion_matrix": [
+        [
+          83,
+          21,
+          1
+        ],
+        [
+          20,
+          4,
+          2
+        ],
+        [
+          5,
+          3,
+          0
+        ]
+      ],
+      "per_class": {
+        "Healthy": {
+          "precision": 0.7685185185185185,
+          "recall": 0.7904761904761904,
+          "f1-score": 0.7793427230046949,
+          "support": 105.0
+        },
+        "Partial tear": {
+          "precision": 0.14285714285714285,
+          "recall": 0.15384615384615385,
+          "f1-score": 0.14814814814814814,
+          "support": 26.0
+        },
+        "Complete rupture": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 8.0
+        },
+        "accuracy": 0.6258992805755396,
+        "macro avg": {
+          "precision": 0.3037918871252205,
+          "recall": 0.31477411477411477,
+          "f1-score": 0.30916362371761436,
+          "support": 139.0
+        },
+        "weighted avg": {
+          "precision": 0.6072570515016558,
+          "recall": 0.6258992805755396,
+          "f1-score": 0.6164232932902504,
+          "support": 139.0
+        }
+      },
+      "roc_auc_ovr_macro": 0.5123587590676933
+    }
+  },
+  "logistic_regression": {
+    "accuracy": 0.49640287769784175,
+    "balanced_accuracy": 0.3985185185185185,
+    "macro_f1": 0.3581393603769904,
+    "confusion_matrix": [
+      [
+        56,
+        35,
+        14
+      ],
+      [
+        4,
+        11,
+        10
+      ],
+      [
+        2,
+        5,
+        2
+      ]
+    ],
+    "per_class": {
+      "Healthy": {
+        "precision": 0.9032258064516129,
+        "recall": 0.5333333333333333,
+        "f1-score": 0.6706586826347305,
+        "support": 105.0
+      },
+      "Partial tear": {
+        "precision": 0.21568627450980393,
+        "recall": 0.44,
+        "f1-score": 0.2894736842105263,
+        "support": 25.0
+      },
+      "Complete rupture": {
+        "precision": 0.07692307692307693,
+        "recall": 0.2222222222222222,
+        "f1-score": 0.11428571428571428,
+        "support": 9.0
+      },
+      "accuracy": 0.49640287769784175,
+      "macro avg": {
+        "precision": 0.39861171929483125,
+        "recall": 0.3985185185185185,
+        "f1-score": 0.3581393603769904,
+        "support": 139.0
+      },
+      "weighted avg": {
+        "precision": 0.7260660016724614,
+        "recall": 0.49640287769784175,
+        "f1-score": 0.5660760806509445,
+        "support": 139.0
+      }
+    },
+    "roc_auc_ovr_macro": 0.6229772772806829,
+    "validation": {
+      "accuracy": 0.4172661870503597,
+      "balanced_accuracy": 0.4152625152625153,
+      "macro_f1": 0.3237117552334943,
+      "confusion_matrix": [
+        [
+          46,
+          36,
+          23
+        ],
+        [
+          7,
+          8,
+          11
+        ],
+        [
+          2,
+          2,
+          4
+        ]
+      ],
+      "per_class": {
+        "Healthy": {
+          "precision": 0.8363636363636363,
+          "recall": 0.4380952380952381,
+          "f1-score": 0.575,
+          "support": 105.0
+        },
+        "Partial tear": {
+          "precision": 0.17391304347826086,
+          "recall": 0.3076923076923077,
+          "f1-score": 0.2222222222222222,
+          "support": 26.0
+        },
+        "Complete rupture": {
+          "precision": 0.10526315789473684,
+          "recall": 0.5,
+          "f1-score": 0.17391304347826086,
+          "support": 8.0
+        },
+        "accuracy": 0.4172661870503597,
+        "macro avg": {
+          "precision": 0.37184661257887797,
+          "recall": 0.4152625152625153,
+          "f1-score": 0.3237117552334943,
+          "support": 139.0
+        },
+        "weighted avg": {
+          "precision": 0.6703742892933416,
+          "recall": 0.4172661870503597,
+          "f1-score": 0.4859286483856393,
+          "support": 139.0
+        }
+      },
+      "roc_auc_ovr_macro": 0.5777398395550122
+    }
+  },
+  "class_counts": {
+    "0": 105,
+    "1": 25,
+    "2": 9
+  },
+  "note": "Module 1 handcrafted-feature baselines (MLP and Logistic Regression). Evaluated on held-out test exams.",
+  "accuracy": 0.6618705035971223,
+  "balanced_accuracy": 0.43089947089947095,
+  "macro_f1": 0.45090465090465087,
+  "roc_auc_ovr_macro": 0.6560307757830977,
+  "confusion_matrix": [
+    [
+      83,
+      21,
+      1
+    ],
+    [
+      17,
+      7,
+      1
+    ],
+    [
+      5,
+      2,
+      2
+    ]
+  ],
+  "per_class": {
+    "Healthy": {
+      "precision": 0.7904761904761904,
+      "recall": 0.7904761904761904,
+      "f1-score": 0.7904761904761904,
+      "support": 105.0
+    },
+    "Partial tear": {
+      "precision": 0.23333333333333334,
+      "recall": 0.28,
+      "f1-score": 0.2545454545454545,
+      "support": 25.0
+    },
+    "Complete rupture": {
+      "precision": 0.5,
+      "recall": 0.2222222222222222,
+      "f1-score": 0.3076923076923077,
+      "support": 9.0
+    },
+    "accuracy": 0.6618705035971223,
+    "macro avg": {
+      "precision": 0.5079365079365079,
+      "recall": 0.43089947089947095,
+      "f1-score": 0.45090465090465087,
+      "support": 139.0
+    },
+    "weighted avg": {
+      "precision": 0.671462829736211,
+      "recall": 0.6618705035971223,
+      "f1-score": 0.6628263822508427,
+      "support": 139.0
+    }
+  },
+  "validation": {
+    "accuracy": 0.6258992805755396,
+    "balanced_accuracy": 0.31477411477411477,
+    "macro_f1": 0.30916362371761436,
+    "confusion_matrix": [
+      [
+        83,
+        21,
+        1
+      ],
+      [
+        20,
+        4,
+        2
+      ],
+      [
+        5,
+        3,
+        0
+      ]
+    ],
+    "per_class": {
+      "Healthy": {
+        "precision": 0.7685185185185185,
+        "recall": 0.7904761904761904,
+        "f1-score": 0.7793427230046949,
+        "support": 105.0
+      },
+      "Partial tear": {
+        "precision": 0.14285714285714285,
+        "recall": 0.15384615384615385,
+        "f1-score": 0.14814814814814814,
+        "support": 26.0
+      },
+      "Complete rupture": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 8.0
+      },
+      "accuracy": 0.6258992805755396,
+      "macro avg": {
+        "precision": 0.3037918871252205,
+        "recall": 0.31477411477411477,
+        "f1-score": 0.30916362371761436,
+        "support": 139.0
+      },
+      "weighted avg": {
+        "precision": 0.6072570515016558,
+        "recall": 0.6258992805755396,
+        "f1-score": 0.6164232932902504,
+        "support": 139.0
+      }
+    },
+    "roc_auc_ovr_macro": 0.5123587590676933
+  }
+}

@@ -40,7 +40,7 @@ def main() -> None:
     model = build_model(architecture, pretrained=False, dropout=float(config.get("dropout", 0.35))).to(device)
     model.load_state_dict(checkpoint["model_state_dict"])
     truths, predictions, filenames, probabilities = predict_volumes(model, test_loader, device)
-    metrics = metrics_for(truths, predictions)
+    metrics = metrics_for(truths, predictions, probabilities)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     metrics_path = args.output_dir / "test_metrics.json"
     result = {
@@ -59,7 +59,7 @@ def main() -> None:
         for name, truth, prediction, probs in zip(filenames, truths, predictions, probabilities):
             writer.writerow((name, truth, prediction, CLASS_NAMES[truth], CLASS_NAMES[prediction], f"{max(probs):.6f}", *(f"{p:.6f}" for p in probs)))
     print(f"Device: {device}; held-out test volumes: {len(truths)}")
-    print(f"Accuracy={metrics['accuracy']:.3f}; balanced accuracy={metrics['balanced_accuracy']:.3f}; macro-F1={metrics['macro_f1']:.3f}")
+    print(f"Accuracy={metrics['accuracy']:.3f}; balanced accuracy={metrics['balanced_accuracy']:.3f}; macro-F1={metrics['macro_f1']:.3f}; roc_auc_ovr_macro={metrics.get('roc_auc_ovr_macro')}")
     print(f"Metrics: {metrics_path.resolve()}")
     print(f"Predictions: {predictions_path.resolve()}")
 

@@ -1,0 +1,69 @@
+{
+  "checkpoint": "/content/proj/Multimodel_knee_MRI-main/Multimodel_knee_MRI-main/acl_mri_classification/artifacts/runs/lr3e-4_bal_aug/best_model.pt",
+  "device": "cuda",
+  "test_volumes": 139,
+  "class_names": [
+    "Healthy",
+    "Partial tear",
+    "Complete rupture"
+  ],
+  "label_mapping": {
+    "0": "Healthy",
+    "1": "Partial tear",
+    "2": "Complete rupture"
+  },
+  "accuracy": 0.8705035971223022,
+  "balanced_accuracy": 0.6516402116402117,
+  "macro_f1": 0.6733408906084427,
+  "confusion_matrix": [
+    [
+      104,
+      1,
+      0
+    ],
+    [
+      8,
+      13,
+      4
+    ],
+    [
+      0,
+      5,
+      4
+    ]
+  ],
+  "per_class": {
+    "Healthy": {
+      "precision": 0.9285714285714286,
+      "recall": 0.9904761904761905,
+      "f1-score": 0.9585253456221198,
+      "support": 105.0
+    },
+    "Partial tear": {
+      "precision": 0.6842105263157895,
+      "recall": 0.52,
+      "f1-score": 0.5909090909090909,
+      "support": 25.0
+    },
+    "Complete rupture": {
+      "precision": 0.5,
+      "recall": 0.4444444444444444,
+      "f1-score": 0.47058823529411764,
+      "support": 9.0
+    },
+    "accuracy": 0.8705035971223022,
+    "macro avg": {
+      "precision": 0.7042606516290727,
+      "recall": 0.6516402116402117,
+      "f1-score": 0.6733408906084427,
+      "support": 139.0
+    },
+    "weighted avg": {
+      "precision": 0.8568723968193867,
+      "recall": 0.8705035971223022,
+      "f1-score": 0.8608142638899058,
+      "support": 139.0
+    }
+  },
+  "roc_auc_ovr_macro": 0.8976030322160353
+}

@@ -1,0 +1,36 @@
+{
+  "volumes": 917,
+  "class_counts": {
+    "0": 690,
+    "1": 172,
+    "2": 55
+  },
+  "split_counts": {
+    "train": 639,
+    "validation": 139,
+    "test": 139
+  },
+  "laterality_counts": {
+    "1": 469,
+    "0": 448
+  },
+  "feature_count": 16,
+  "feature_names": [
+    "roi_mean",
+    "roi_std",
+    "roi_min",
+    "roi_max",
+    "roi_median",
+    "roi_p10",
+    "roi_p90",
+    "slice_mean",
+    "slice_mean_std",
+    "roi_width",
+    "roi_height",
+    "roi_depth",
+    "roi_x",
+    "roi_y",
+    "roi_z",
+    "knee_side"
+  ]
+}
