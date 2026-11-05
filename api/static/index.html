@@ -352,13 +352,28 @@
           </table>
         </div>
 
-        <!-- Muted Notes for Modules 1 & 4 -->
-        <div class="modules-status-notes">
-          <div class="module-muted-note">
-            <strong>Module 1 (ANN/MLP Tabular):</strong> Not available in this build. <em>(Requires clinical demographic/WOMAC covariates; no trained model or scaler artifact exists in module1_baseline/artifacts/.)</em>
+        <!-- Module 1: Image-derived Baseline (MLP + LogReg) -->
+        <div class="pacs-panel" id="mod1-card" style="margin-top:16px;">
+          <div class="pacs-panel-header">Module 1 &mdash; Image-derived Baseline (MLP + LogReg)</div>
+          <div class="pacs-panel-body" id="mod1-body">
+            <span class="text-muted">Not run &mdash; model artifacts unavailable.</span>
           </div>
-          <div class="module-muted-note">
-            <strong>Module 4 (LSTM/GRU Longitudinal Risk):</strong> Not available. <em>(Planned modelling component; no real-world ACL recovery prediction claimed.)</em>
+        </div>
+
+        <!-- Module 4: GRU Slice-Sequence Classifier -->
+        <div class="pacs-panel" id="mod4-card" style="margin-top:12px;">
+          <div class="pacs-panel-header">Module 4 &mdash; GRU Slice-Sequence Classifier (3-class ACL)</div>
+          <div class="pacs-panel-body" id="mod4-body">
+            <span class="text-muted">Not run &mdash; GRU checkpoint unavailable.</span>
+          </div>
+          <!-- Recovery simulation: separate, always SIMULATED -->
+          <div class="pacs-panel-body" id="recovery-sim-card" style="border-top:1px solid var(--border-color,#333);margin-top:8px;padding-top:8px;display:none;">
+            <span class="sim-badge" style="background:#2a2a00;color:#ffe066;font-size:0.72rem;padding:2px 7px;border-radius:3px;font-weight:700;letter-spacing:.04em;margin-right:8px;">SIMULATED</span>
+            <span style="font-size:0.82rem;color:var(--color-muted,#888);">Illustrative recovery trajectory &mdash; not a trained prediction</span>
+            <table class="pacs-table" id="recovery-sim-table" style="margin-top:8px;">
+              <thead><tr><th>Timepoint</th><th>Score</th><th>Label</th></tr></thead>
+              <tbody id="recovery-sim-tbody"></tbody>
+            </table>
           </div>
         </div>
       </section>

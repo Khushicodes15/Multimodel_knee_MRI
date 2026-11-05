@@ -1,0 +1,6 @@
+{
+  "_fixture_note": "TEST FIXTURE ONLY — not a real model prediction",
+  "status": "error",
+  "error": "Simulated error loading GRU checkpoint",
+  "is_longitudinal_recovery": false
+}

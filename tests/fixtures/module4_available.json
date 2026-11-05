@@ -1,0 +1,16 @@
+{
+  "_fixture_note": "TEST FIXTURE ONLY — not a real model prediction",
+  "status": "available",
+  "predicted_class": "Partial tear",
+  "predicted_index": 1,
+  "confidence": 0.712,
+  "probabilities": {
+    "Healthy": 0.183,
+    "Partial tear": 0.712,
+    "Complete rupture": 0.105
+  },
+  "slices_evaluated": 20,
+  "is_longitudinal_recovery": false,
+  "model_id": "GRUSliceSequenceClassifier",
+  "note": "GRU 3-class ACL slice-sequence prediction on ONE volume"
+}

@@ -1,0 +1,14 @@
+{
+  "_fixture_note": "TEST FIXTURE ONLY — SIMULATED data, not a trained prediction",
+  "record_type": "SIMULATED",
+  "is_trained_prediction": false,
+  "acl_severity": "partial_tear",
+  "treatment": "conservative",
+  "trajectory": [
+    {"timepoint": "M0",  "recovery_score": 0.35, "label": "Baseline"},
+    {"timepoint": "M3",  "recovery_score": 0.55, "label": "Early recovery"},
+    {"timepoint": "M6",  "recovery_score": 0.72, "label": "Mid recovery"},
+    {"timepoint": "M12", "recovery_score": 0.85, "label": "Late recovery"}
+  ],
+  "disclaimer": "This trajectory is illustrative only. It is not based on patient-specific data or clinical evidence."
+}

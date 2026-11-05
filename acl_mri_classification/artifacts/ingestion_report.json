@@ -1,0 +1,49 @@
+{
+  "metadata_path": "/content/proj/Multimodel_knee_MRI-main/Multimodel_knee_MRI-main/data/KneeMRI/metadata.csv",
+  "volumes_dir": "/content/proj/Multimodel_knee_MRI-main/Multimodel_knee_MRI-main/data/KneeMRI/volumetric_data",
+  "metadata_rows": 917,
+  "unique_exams": 909,
+  "label_mapping": {
+    "0": "Healthy",
+    "1": "Partial tear",
+    "2": "Complete rupture"
+  },
+  "class_counts": {
+    "0": 690,
+    "1": 172,
+    "2": 55
+  },
+  "volume_shapes": {
+    "(32, 320, 320)": 315,
+    "(25, 320, 320)": 14,
+    "(33, 320, 320)": 48,
+    "(29, 320, 320)": 17,
+    "(27, 320, 320)": 26,
+    "(22, 320, 320)": 3,
+    "(21, 320, 320)": 1,
+    "(25, 292, 320)": 1,
+    "(30, 320, 320)": 300,
+    "(35, 320, 320)": 31,
+    "(24, 320, 320)": 6,
+    "(28, 320, 320)": 44,
+    "(31, 320, 320)": 30,
+    "(38, 320, 320)": 1,
+    "(26, 320, 320)": 12,
+    "(34, 320, 320)": 53,
+    "(36, 320, 320)": 5,
+    "(23, 320, 320)": 2,
+    "(37, 320, 320)": 2,
+    "(28, 320, 308)": 1,
+    "(30, 290, 320)": 1,
+    "(45, 320, 320)": 1,
+    "(30, 320, 300)": 1,
+    "(30, 312, 320)": 1,
+    "(32, 320, 316)": 1
+  },
+  "duplicate_volume_filenames": [],
+  "missing_volume_files": [],
+  "unreferenced_pck_files": [],
+  "invalid_rois": [],
+  "errors": [],
+  "valid": true
+}

@@ -41,6 +41,16 @@ from acl_mri_classification.model import (
 from module2_preprocessing.preprocessing import crop_roi, normalize_resize_roi
 from module5_reporting.report import render_template, validate
 
+# Integration adapters (Module 1 & Module 4) — loaded lazily; return unavailable if artifacts missing
+try:
+    from adapters.module1_adapter import Module1Adapter as _Module1Adapter
+    from adapters.module4_adapter import Module4Adapter as _Module4Adapter
+    _M1 = _Module1Adapter()
+    _M4 = _Module4Adapter()
+except Exception:  # pragma: no cover
+    _M1 = None  # type: ignore[assignment]
+    _M4 = None  # type: ignore[assignment]
+
 ROOT = Path(__file__).resolve().parents[1]
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 SPLITS = ROOT / "acl_mri_classification/artifacts/splits.csv"
@@ -214,6 +224,8 @@ def build_structured_findings(
     models_evaluated: list[str],
     laterality: str = "unknown",
     ground_truth: str | None = None,
+    _row: dict[str, Any] | None = None,
+    _vol: "np.ndarray | None" = None,
 ) -> dict[str, Any]:
     """Integration layer: build standardized five-module findings object."""
     box = None
@@ -237,6 +249,25 @@ def build_structured_findings(
             top_c = max(m_probs.items(), key=lambda kv: kv[1])[0]
             model_top_picks.append(top_c)
     models_disagree = len(set(model_top_picks)) > 1 if model_top_picks else False
+
+    # --- Module 1 adapter ---
+    _tabular = None
+    if _M1 is not None:
+        try:
+            _tabular = _M1.predict(_row, volume=_vol)
+        except Exception as _e:
+            _tabular = {"status": "error", "error": str(_e), "is_clinical_tabular": False}
+
+    # --- Module 4 adapter ---
+    _risk = None
+    _recovery_sim = None
+    if _M4 is not None:
+        try:
+            _risk = _M4.predict(_vol, _row)
+            _acl_sev = consensus_class.lower().replace(" ", "_")
+            _recovery_sim = _Module4Adapter.get_simulated_recovery_trajectory(_acl_sev)
+        except Exception as _e:
+            _risk = {"status": "error", "error": str(_e), "is_longitudinal_recovery": False}
 
     return {
         "volume_id": volume_id,
@@ -266,8 +297,9 @@ def build_structured_findings(
             "models_evaluated": models_evaluated,
             "models_disagree": models_disagree,
         },
-        "tabular": None,
-        "risk": None,
+        "tabular": _tabular,
+        "risk": _risk,
+        "recovery_simulation": _recovery_sim,
         "ground_truth": ground_truth,
     }
 
@@ -697,6 +729,8 @@ async def predict(request: Request):
         models_evaluated=list(LOADED_MODELS.keys()),
         laterality=laterality,
         ground_truth=ground_truth,
+        _row=row,
+        _vol=vol,
     )
 
     return {

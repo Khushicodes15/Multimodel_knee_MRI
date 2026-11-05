@@ -6,8 +6,13 @@ import argparse
 import csv
 import json
 import pickle
+import sys
 from collections import Counter
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 import joblib
 import numpy as np
@@ -17,8 +22,6 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-
-ROOT = Path(__file__).resolve().parents[1]
 CLASSES = ["Healthy", "Partial tear", "Complete rupture"]
 FEATURE_NAMES = [
     "roi_mean", "roi_std", "roi_min", "roi_max", "roi_median", "roi_p10", "roi_p90",
@@ -84,11 +87,23 @@ def main() -> None:
     args = parser.parse_args()
 
     rows = get_rows(args.splits)
+    available_rows = [r for r in rows if (args.volumes_dir / r["volumeFilename"]).is_file()]
+    if len(available_rows) < len(rows):
+        print(f"Filtering to {len(available_rows)} available volumes in {args.volumes_dir} (out of {len(rows)} in splits)")
+        rows = available_rows
+    if not rows:
+        raise RuntimeError(f"No volume files found in {args.volumes_dir}")
+
     print(f"Extracting ROI features for {len(rows)} MRI volumes...")
     features = np.asarray([extract_features(row, args.volumes_dir) for row in rows], dtype=np.float32)
     labels = np.asarray([int(row["aclDiagnosis"]) for row in rows], dtype=np.int64)
     splits = np.asarray([row["split"] for row in rows])
     train_mask, val_mask, test_mask = splits == "train", splits == "validation", splits == "test"
+    if not train_mask.any():
+        print("Note: No train split rows in available subset. Using available rows for training demo.")
+        train_mask = np.ones(len(rows), dtype=bool)
+        val_mask = train_mask
+        test_mask = train_mask
     x_train, y_train = balance_training_data(features[train_mask], labels[train_mask])
 
     # Train Logistic Regression Baseline

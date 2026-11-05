@@ -587,6 +587,69 @@
     // Consensus Table
     renderConsensusList(cnn.per_model || data.per_model_probabilities || {});
 
+    // Module 1 chip + card
+    var tabular = findings.tabular;
+    var chip1 = document.getElementById('chip-mod1');
+    var mod1Body = document.getElementById('mod1-body');
+    if (tabular && tabular.status === 'available') {
+      if (chip1) { chip1.className = 'module-status-chip status-run'; chip1.querySelector('span.mod-dot + span, span:last-child') && (chip1.lastElementChild.textContent = 'Module 1 (Baseline): Run'); chip1.title = ''; }
+      if (mod1Body) {
+        var mlp = tabular.mlp || {};
+        var lr = tabular.logistic_regression || {};
+        mod1Body.innerHTML =
+          '<table class="pacs-table"><thead><tr><th>Model</th><th>Predicted</th><th>Confidence</th></tr></thead><tbody>' +
+          '<tr><td>MLP</td><td>' + (mlp.predicted_class || '—') + '</td><td class="tabular-nums">' + formatPercent(mlp.confidence) + '</td></tr>' +
+          '<tr><td>LogReg</td><td>' + (lr.predicted_class || '—') + '</td><td class="tabular-nums">' + formatPercent(lr.confidence) + '</td></tr>' +
+          '</tbody></table>';
+      }
+    } else {
+      if (chip1) { chip1.className = 'module-status-chip status-not-run'; }
+      if (mod1Body) {
+        var bm = tabular && tabular.benchmark_reference ? ' Benchmark ref: ' + tabular.benchmark_reference : '';
+        mod1Body.innerHTML = '<span class="text-muted">Not run \u2014 model artifacts unavailable.' + bm + '</span>';
+      }
+    }
+
+    // Module 4 chip + card
+    var risk = findings.risk;
+    var chip4 = document.getElementById('chip-mod4');
+    var mod4Body = document.getElementById('mod4-body');
+    if (risk && risk.status === 'available') {
+      if (chip4) { chip4.className = 'module-status-chip status-run'; chip4.title = ''; }
+      if (mod4Body) {
+        var prbs4 = risk.probabilities || {};
+        var probRows4 = Object.entries(prbs4).map(function(kv) {
+          return '<tr><td>' + kv[0] + '</td><td class="tabular-nums">' + formatPercent(kv[1]) + '</td></tr>';
+        }).join('');
+        mod4Body.innerHTML =
+          '<table class="pacs-table"><thead><tr><th>Class</th><th>Probability</th></tr></thead><tbody>' + probRows4 + '</tbody></table>' +
+          '<div style="margin-top:6px;font-size:0.82rem;color:var(--color-muted,#888);">Predicted: <strong>' + (risk.predicted_class || '—') + '</strong> &bull; Confidence: <strong>' + formatPercent(risk.confidence) + '</strong> &bull; Slices: ' + (risk.slices_evaluated || '—') + '</div>';
+      }
+    } else {
+      if (chip4) { chip4.className = 'module-status-chip status-not-run'; }
+      if (mod4Body) {
+        mod4Body.innerHTML = '<span class="text-muted">Not run \u2014 GRU checkpoint unavailable.</span>';
+      }
+    }
+
+    // Recovery simulation card (always separate, always SIMULATED)
+    var recSim = findings.recovery_simulation;
+    var simCard = document.getElementById('recovery-sim-card');
+    var simTbody = document.getElementById('recovery-sim-tbody');
+    if (recSim && recSim.record_type === 'SIMULATED' && Array.isArray(recSim.trajectory) && simCard && simTbody) {
+      simCard.style.display = '';
+      simTbody.innerHTML = recSim.trajectory.map(function(t) {
+        // Adapter uses "month" (int, e.g. 0/3/6/12) and "score" (0-100 scale)
+        var tp = t.timepoint !== undefined ? t.timepoint : ('M' + t.month);
+        var score = t.recovery_score !== undefined
+          ? Math.round(t.recovery_score * 100) + '%'
+          : (t.score !== undefined ? Math.round(t.score) + '/100' : '—');
+        return '<tr><td>' + tp + '</td><td class="tabular-nums">' + score + '</td><td style="color:var(--color-muted,#888);font-size:0.8rem;">' + (t.label || '') + '</td></tr>';
+      }).join('');
+    } else {
+      if (simCard) simCard.style.display = 'none';
+    }
+
     // Reset Report Panel
     dom.btnGenerateReport.disabled = false;
     dom.reportTextPanel.textContent = 'Diagnosis complete. Click "Re-generate summary" to compile structured findings.';

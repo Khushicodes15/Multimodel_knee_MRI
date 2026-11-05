@@ -1,0 +1,6 @@
+{
+  "_fixture_note": "TEST FIXTURE ONLY — not a real model prediction",
+  "status": "unavailable",
+  "reason": "GRU checkpoint not found: module4_recovery/artifacts/gru_checkpoint.pt",
+  "is_longitudinal_recovery": false
+}

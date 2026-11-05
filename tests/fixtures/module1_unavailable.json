@@ -1,0 +1,32 @@
+{
+  "status": "unavailable",
+  "model_identity": "Module 1 Image-Derived ROI Feature Baselines",
+  "reason": "Model weight artifacts (baseline_mlp.joblib, baseline_logreg.joblib) not present in build.",
+  "is_clinical_tabular": false,
+  "features_extracted": true,
+  "features": {
+    "roi_mean": 184.25,
+    "roi_std": 94.12,
+    "roi_min": 12.0,
+    "roi_max": 850.0,
+    "roi_median": 172.0,
+    "roi_p10": 78.0,
+    "roi_p90": 310.0,
+    "slice_mean": 184.25,
+    "slice_mean_std": 14.3,
+    "roi_width": 64.0,
+    "roi_height": 72.0,
+    "roi_depth": 4.0,
+    "roi_x": 128.0,
+    "roi_y": 110.0,
+    "roi_z": 12.0,
+    "knee_side": 0.0
+  },
+  "benchmark_reference": {
+    "mlp_test_accuracy": 0.662,
+    "mlp_test_balanced_accuracy": 0.431,
+    "mlp_test_macro_f1": 0.451,
+    "logreg_test_accuracy": 0.612,
+    "notes": "Pre-computed test partition scores from module1_baseline/artifacts/metrics.json"
+  }
+}

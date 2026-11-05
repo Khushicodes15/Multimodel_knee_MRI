@@ -1,0 +1,14 @@
+{
+  "source": "KneeMRI ROI annotations",
+  "volumes": 917,
+  "image_size": 160,
+  "cached_slice_shapes": {
+    "(3, 160, 160)": 505,
+    "(6, 160, 160)": 10,
+    "(2, 160, 160)": 71,
+    "(4, 160, 160)": 291,
+    "(5, 160, 160)": 40
+  },
+  "cache_dir": "/content/proj/Multimodel_knee_MRI-main/Multimodel_knee_MRI-main/acl_mri_classification/artifacts/cache_160",
+  "augmentation": "optional mild intensity/noise only; no orientation flips"
+}

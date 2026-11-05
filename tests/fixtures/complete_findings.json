@@ -1,0 +1,40 @@
+{
+  "_fixture_note": "TEST FIXTURE ONLY — complete 5-module findings object for integration tests",
+  "volume_id": "425713-8",
+  "volume_filename": "425713-8.pck",
+  "laterality": "right",
+  "roi": {
+    "source": "splits",
+    "total_slices": 28,
+    "volume_shape": [28, 320, 320],
+    "plane": "sagittal",
+    "box": null
+  },
+  "preprocessing": {
+    "normalization": "percentile_1_99_clip_0_1",
+    "resize": "bilinear_160x160",
+    "roi_cropped": false
+  },
+  "cnn": {
+    "consensus_class": "Healthy",
+    "ensemble_prediction": "Healthy",
+    "confidence": 0.871,
+    "ensemble_confidence": 0.871,
+    "probabilities": {
+      "Healthy": 0.871,
+      "Partial tear": 0.098,
+      "Complete rupture": 0.031
+    },
+    "per_model": {
+      "resnet18": {"Healthy": 0.883, "Partial tear": 0.091, "Complete rupture": 0.026},
+      "densenet121": {"Healthy": 0.862, "Partial tear": 0.102, "Complete rupture": 0.036},
+      "efficientnet_b0": {"Healthy": 0.869, "Partial tear": 0.101, "Complete rupture": 0.030}
+    },
+    "models_evaluated": ["resnet18", "densenet121", "efficientnet_b0"],
+    "models_disagree": false
+  },
+  "tabular": null,
+  "risk": null,
+  "recovery_simulation": null,
+  "ground_truth": "Healthy"
+}

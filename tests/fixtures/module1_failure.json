@@ -1,0 +1,7 @@
+{
+  "_fixture_note": "TEST FIXTURE ONLY — not a real model prediction",
+  "status": "error",
+  "error": "Simulated error loading MLP artifact: [Errno 2] No such file or directory",
+  "model_identity": "Module 1 Image-Derived ROI Feature Baselines",
+  "is_clinical_tabular": false
+}
