@@ -53,32 +53,38 @@
         </div>
       </header>
 
-      <!-- How it Works Flow -->
+      <!-- Five-Module Architecture Flow -->
       <section class="section-block">
-        <h2 class="section-heading">Diagnostic pipeline</h2>
+        <h2 class="section-heading">Diagnostic pipeline (Five-Module Architecture)</h2>
         <div class="pipeline-strip">
           <div class="pipeline-step">
             <span class="step-num">01</span>
-            <span class="step-name">Volume input</span>
-            <span class="step-desc">Sagittal .pck array (27-36 slices)</span>
+            <span class="step-name">Module 1 &mdash; Image Feature Baseline</span>
+            <span class="step-desc">16 ROI/intensity features, MLP and Logistic Regression.</span>
           </div>
-          <span class="step-arrow">→</span>
+          <span class="step-arrow">&rarr;</span>
           <div class="pipeline-step">
             <span class="step-num">02</span>
-            <span class="step-name">Slice sampling</span>
-            <span class="step-desc">16 deterministic central slices</span>
+            <span class="step-name">Module 2 &mdash; MRI Preprocessing</span>
+            <span class="step-desc">sagittal volume preprocessing, ROI extraction, percentile normalization and resizing.</span>
           </div>
-          <span class="step-arrow">→</span>
+          <span class="step-arrow">&rarr;</span>
           <div class="pipeline-step">
             <span class="step-num">03</span>
-            <span class="step-name">3 CNN backbones</span>
-            <span class="step-desc">ResNet-18, DenseNet-121, EfficientNet-B0</span>
+            <span class="step-name">Module 3 &mdash; CNN Ensemble</span>
+            <span class="step-desc">ResNet-18, DenseNet-121, EfficientNet-B0, consensus and Grad-CAM.</span>
           </div>
-          <span class="step-arrow">→</span>
+          <span class="step-arrow">&rarr;</span>
           <div class="pipeline-step">
             <span class="step-num">04</span>
-            <span class="step-name">Consensus & Grad-CAM</span>
-            <span class="step-desc">Mean logit pooling & real gradient localization</span>
+            <span class="step-name">Module 4 &mdash; GRU Slice Sequence</span>
+            <span class="step-desc">ordered ResNet-18 slice embeddings and three-class ACL classification.</span>
+          </div>
+          <span class="step-arrow">&rarr;</span>
+          <div class="pipeline-step">
+            <span class="step-num">05</span>
+            <span class="step-name">Module 5 &mdash; Grounded Reporting</span>
+            <span class="step-desc">structured reports, validation, deterministic templates and optional Gemini generation.</span>
           </div>
         </div>
       </section>
@@ -114,13 +120,6 @@
         </p>
       </section>
 
-      <!-- Future Work -->
-      <section class="section-block">
-        <h2 class="section-heading">Planned components & future work</h2>
-        <p class="future-work-note">
-          <strong>Module 4 (Longitudinal Risk & Recovery):</strong> Planned sequence modelling component (LSTM/GRU); no real-world recovery prediction is claimed at this stage due to single-timepoint dataset constraints.
-        </p>
-      </section>
 
       <!-- Research Disclaimer -->
       <section class="section-block disclaimer-block">
@@ -273,19 +272,19 @@
 
         <!-- Five-Module Execution Tracking -->
         <div class="modules-tracking-grid">
-          <div class="module-status-chip status-not-run" id="chip-mod1" title="Tabular model artifacts not available in build">
-            <span class="mod-dot"></span> Module 1 (Tabular): Not run
+          <div class="module-status-chip status-run" id="chip-mod1" title="Module 1: 16 ROI/intensity image feature baseline">
+            <span class="mod-dot"></span> Module 1 (Feature Baseline): Ready
           </div>
-          <div class="module-status-chip status-run" id="chip-mod2">
+          <div class="module-status-chip status-run" id="chip-mod2" title="Module 2: Sagittal volume preprocessing and normalization">
             <span class="mod-dot"></span> Module 2 (Preprocessing): Run
           </div>
-          <div class="module-status-chip status-run" id="chip-mod3">
+          <div class="module-status-chip status-run" id="chip-mod3" title="Module 3: ResNet-18, DenseNet-121, EfficientNet-B0 consensus">
             <span class="mod-dot"></span> Module 3 (CNN Ensemble): Run
           </div>
-          <div class="module-status-chip status-not-run" id="chip-mod4" title="Planned longitudinal component, no clinical claim">
-            <span class="mod-dot"></span> Module 4 (Longitudinal): Not run
+          <div class="module-status-chip status-run" id="chip-mod4" title="Module 4: GRU slice sequence classification">
+            <span class="mod-dot"></span> Module 4 (GRU Sequence): Ready
           </div>
-          <div class="module-status-chip status-run" id="chip-mod5">
+          <div class="module-status-chip status-run" id="chip-mod5" title="Module 5: Structured report and grounding validation">
             <span class="mod-dot"></span> Module 5 (Grounded Report): Ready
           </div>
         </div>
@@ -352,23 +351,23 @@
           </table>
         </div>
 
-        <!-- Module 1: Image-derived Baseline (MLP + LogReg) -->
+        <!-- Module 1: Image Feature Baseline (MLP + LogReg) -->
         <div class="pacs-panel" id="mod1-card" style="margin-top:16px;">
-          <div class="pacs-panel-header">Module 1 &mdash; Image-derived Baseline (MLP + LogReg)</div>
+          <div class="pacs-panel-header">Module 1 &mdash; Image Feature Baseline (MLP + LogReg)</div>
           <div class="pacs-panel-body" id="mod1-body">
-            <span class="text-muted">Not run &mdash; model artifacts unavailable.</span>
+            <span class="text-muted">Awaiting analysis &mdash; extracts 16 ROI/intensity features and runs MLP &amp; Logistic Regression baselines.</span>
           </div>
         </div>
 
-        <!-- Module 4: GRU Slice-Sequence Classifier -->
+        <!-- Module 4: GRU Slice Sequence Classification -->
         <div class="pacs-panel" id="mod4-card" style="margin-top:12px;">
-          <div class="pacs-panel-header">Module 4 &mdash; GRU Slice-Sequence Classifier (3-class ACL)</div>
+          <div class="pacs-panel-header">Module 4 &mdash; GRU Slice Sequence Classification (3-Class ACL)</div>
           <div class="pacs-panel-body" id="mod4-body">
-            <span class="text-muted">Not run &mdash; GRU checkpoint unavailable.</span>
+            <span class="text-muted">Awaiting analysis &mdash; runs GRU classifier over ordered ResNet-18 slice embeddings.</span>
           </div>
           <!-- Recovery simulation: separate, always SIMULATED -->
           <div class="pacs-panel-body" id="recovery-sim-card" style="border-top:1px solid var(--border-color,#333);margin-top:8px;padding-top:8px;display:none;">
-            <span class="sim-badge" style="background:#2a2a00;color:#ffe066;font-size:0.72rem;padding:2px 7px;border-radius:3px;font-weight:700;letter-spacing:.04em;margin-right:8px;">SIMULATED</span>
+            <span class="sim-badge" style="background:#2a2a00;color:#ffe066;font-size:0.72rem;padding:2px 7px;border-radius:3px;font-weight:700;letter-spacing:.04em;margin-right:8px;">SIMULATED &mdash; NOT A TRAINED PREDICTION</span>
             <span style="font-size:0.82rem;color:var(--color-muted,#888);">Illustrative recovery trajectory &mdash; not a trained prediction</span>
             <table class="pacs-table" id="recovery-sim-table" style="margin-top:8px;">
               <thead><tr><th>Timepoint</th><th>Score</th><th>Label</th></tr></thead>

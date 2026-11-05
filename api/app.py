@@ -443,8 +443,8 @@ def health():
         "default_report_mode": REPORT_MODE_DEFAULT,
         "gemini_model": GEMINI_MODEL,
         "max_upload_mb": MAX_UPLOAD_MB,
-        "tabular_available": False,
-        "risk_model_available": False,
+        "tabular_available": _M1.load_artifacts() if _M1 is not None else False,
+        "risk_model_available": _M4.load_artifacts() if _M4 is not None else False,
     }
 
 
@@ -468,9 +468,19 @@ def benchmarks():
         except Exception:
             pass
 
-    if recovery_metrics_file.is_file():
+    seq_metrics_file = ROOT / "module4_sequence/artifacts/metrics.json"
+    if seq_metrics_file.is_file():
         try:
-            res["module4_recovery"] = json.loads(recovery_metrics_file.read_text(encoding="utf-8"))
+            m4_data = json.loads(seq_metrics_file.read_text(encoding="utf-8"))
+            res["module4_sequence"] = m4_data
+            res["module4_recovery"] = m4_data
+        except Exception:
+            pass
+    elif recovery_metrics_file.is_file():
+        try:
+            m4_data = json.loads(recovery_metrics_file.read_text(encoding="utf-8"))
+            res["module4_sequence"] = m4_data
+            res["module4_recovery"] = m4_data
         except Exception:
             pass
 

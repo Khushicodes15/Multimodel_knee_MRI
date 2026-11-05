@@ -237,6 +237,14 @@
         html += '<tr><td>Module 1 LogReg macro-F1</td><td>' + (lr.macro_f1 ? lr.macro_f1.toFixed(3) : '—') + '</td></tr>';
       }
 
+      var m4rec = data.module4_sequence || data.module4_recovery;
+      if (m4rec && m4rec.test) {
+        var m4test = m4rec.test;
+        html += '<tr><td>Module 4 GRU test accuracy</td><td>' + formatPercent(m4test.accuracy) + '</td></tr>';
+        html += '<tr><td>Module 4 GRU balanced accuracy</td><td>' + formatPercent(m4test.balanced_accuracy) + '</td></tr>';
+        html += '<tr><td>Module 4 GRU macro-F1</td><td>' + (m4test.macro_f1 ? m4test.macro_f1.toFixed(3) : '—') + '</td></tr>';
+      }
+
       html += '</tbody></table>';
       dom.landingBenchmarks.innerHTML = html;
     } catch (err) {
@@ -592,21 +600,32 @@
     var chip1 = document.getElementById('chip-mod1');
     var mod1Body = document.getElementById('mod1-body');
     if (tabular && tabular.status === 'available') {
-      if (chip1) { chip1.className = 'module-status-chip status-run'; chip1.querySelector('span.mod-dot + span, span:last-child') && (chip1.lastElementChild.textContent = 'Module 1 (Baseline): Run'); chip1.title = ''; }
+      if (chip1) {
+        chip1.className = 'module-status-chip status-run';
+        var labelEl1 = chip1.querySelector('span.mod-dot + span, span:last-child');
+        if (labelEl1) labelEl1.textContent = 'Module 1 (Feature Baseline): Run';
+        chip1.title = '16 ROI/intensity features; MLP & LogReg operational';
+      }
       if (mod1Body) {
         var mlp = tabular.mlp || {};
         var lr = tabular.logistic_regression || {};
         mod1Body.innerHTML =
-          '<table class="pacs-table"><thead><tr><th>Model</th><th>Predicted</th><th>Confidence</th></tr></thead><tbody>' +
-          '<tr><td>MLP</td><td>' + (mlp.predicted_class || '—') + '</td><td class="tabular-nums">' + formatPercent(mlp.confidence) + '</td></tr>' +
-          '<tr><td>LogReg</td><td>' + (lr.predicted_class || '—') + '</td><td class="tabular-nums">' + formatPercent(lr.confidence) + '</td></tr>' +
-          '</tbody></table>';
+          '<table class="pacs-table"><thead><tr><th>Model</th><th>Predicted class</th><th>Confidence</th></tr></thead><tbody>' +
+          '<tr><td>MLP (64, 32)</td><td><strong>' + (mlp.predicted_class || '—') + '</strong></td><td class="tabular-nums">' + formatPercent(mlp.confidence) + '</td></tr>' +
+          '<tr><td>Logistic Regression</td><td><strong>' + (lr.predicted_class || '—') + '</strong></td><td class="tabular-nums">' + formatPercent(lr.confidence) + '</td></tr>' +
+          '</tbody></table>' +
+          '<div style="margin-top:6px;font-size:0.82rem;color:var(--color-muted,#888);">Image-derived feature baseline: 16 ROI/intensity features extracted from MRI volume.</div>';
       }
     } else {
-      if (chip1) { chip1.className = 'module-status-chip status-not-run'; }
+      if (chip1) {
+        chip1.className = 'module-status-chip status-not-run';
+        var labelEl1 = chip1.querySelector('span.mod-dot + span, span:last-child');
+        if (labelEl1) labelEl1.textContent = 'Module 1 (Feature Baseline): Unavailable';
+        chip1.title = (tabular && tabular.reason) || 'Model artifacts unavailable';
+      }
       if (mod1Body) {
-        var bm = tabular && tabular.benchmark_reference ? ' Benchmark ref: ' + tabular.benchmark_reference : '';
-        mod1Body.innerHTML = '<span class="text-muted">Not run \u2014 model artifacts unavailable.' + bm + '</span>';
+        var reason = (tabular && tabular.reason) || 'Model artifacts unavailable.';
+        mod1Body.innerHTML = '<span class="text-muted">Module 1 unavailable &mdash; ' + reason + '</span>';
       }
     }
 
@@ -615,20 +634,32 @@
     var chip4 = document.getElementById('chip-mod4');
     var mod4Body = document.getElementById('mod4-body');
     if (risk && risk.status === 'available') {
-      if (chip4) { chip4.className = 'module-status-chip status-run'; chip4.title = ''; }
+      if (chip4) {
+        chip4.className = 'module-status-chip status-run';
+        var labelEl4 = chip4.querySelector('span.mod-dot + span, span:last-child');
+        if (labelEl4) labelEl4.textContent = 'Module 4 (GRU Sequence): Run';
+        chip4.title = 'GRU slice sequence classification operational';
+      }
       if (mod4Body) {
         var prbs4 = risk.probabilities || {};
         var probRows4 = Object.entries(prbs4).map(function(kv) {
           return '<tr><td>' + kv[0] + '</td><td class="tabular-nums">' + formatPercent(kv[1]) + '</td></tr>';
         }).join('');
         mod4Body.innerHTML =
+          '<div style="margin-bottom:8px;font-size:0.85rem;"><strong>Predicted class:</strong> <span style="font-weight:700;color:var(--text-primary,#fff);">' + (risk.predicted_class || '—') + '</span> &bull; <strong>Confidence:</strong> ' + formatPercent(risk.confidence) + ' &bull; <strong>Slices evaluated:</strong> ' + (risk.slices_evaluated || '—') + '</div>' +
           '<table class="pacs-table"><thead><tr><th>Class</th><th>Probability</th></tr></thead><tbody>' + probRows4 + '</tbody></table>' +
-          '<div style="margin-top:6px;font-size:0.82rem;color:var(--color-muted,#888);">Predicted: <strong>' + (risk.predicted_class || '—') + '</strong> &bull; Confidence: <strong>' + formatPercent(risk.confidence) + '</strong> &bull; Slices: ' + (risk.slices_evaluated || '—') + '</div>';
+          '<div style="margin-top:6px;font-size:0.80rem;color:var(--color-muted,#888);">Architecture: ' + (risk.architecture || 'ResNet-18 Slice Embeddings + GRU') + ' &bull; Scope: ' + (risk.input_scope || 'Single MRI volume') + '</div>';
       }
     } else {
-      if (chip4) { chip4.className = 'module-status-chip status-not-run'; }
+      if (chip4) {
+        chip4.className = 'module-status-chip status-not-run';
+        var labelEl4 = chip4.querySelector('span.mod-dot + span, span:last-child');
+        if (labelEl4) labelEl4.textContent = 'Module 4 (GRU Sequence): Unavailable';
+        chip4.title = (risk && risk.reason) || 'Checkpoint unavailable';
+      }
       if (mod4Body) {
-        mod4Body.innerHTML = '<span class="text-muted">Not run \u2014 GRU checkpoint unavailable.</span>';
+        var reason4 = (risk && risk.reason) || 'GRU checkpoint unavailable.';
+        mod4Body.innerHTML = '<span class="text-muted">Module 4 unavailable &mdash; ' + reason4 + '</span>';
       }
     }
 
