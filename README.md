@@ -378,6 +378,61 @@ python -m module5_reporting.report --input acl_mri_classification/artifacts/expl
 
 ---
 
+## 🚀 Render Cloud Deployment
+
+The application is structured as a unified service hosting both the FastAPI inference API and the static clinical PACS interface on a single origin.
+
+### 1. Render Setup
+1. Log in to [Render](https://dashboard.render.com/) and click **New +** $\rightarrow$ **Web Service**.
+2. Connect your GitHub repository: `https://github.com/Khushicodes15/Multimodel_knee_MRI`.
+3. Configure service details:
+   - **Environment**: `Python 3`
+   - **Region**: Any preferred region (e.g., Oregon, Frankfurt).
+   - **Branch**: `main`
+   - **Build Command**:
+     ```bash
+     pip install -r requirements.txt
+     ```
+   - **Start Command**:
+     ```bash
+     uvicorn api.app:app --host 0.0.0.0 --port $PORT
+     ```
+
+### 2. Environment Variables in Render Dashboard
+| Variable | Value | Purpose |
+| :--- | :--- | :--- |
+| `PYTHON_VERSION` | `3.11.8` | Ensures consistent runtime Python version |
+| `REPORT_MODE_DEFAULT` | `template` | Default deterministic reporting mode |
+| `GEMINI_MODEL` | `gemini-2.5-flash` | Lightweight LLM model endpoint |
+| `GEMINI_API_KEY` | *(Optional)* | Server-side API key from Google AI Studio (never committed) |
+| `MAX_UPLOAD_MB` | `100` | Upload limit for volumetric `.pck` files |
+
+*(Note: If using `render.yaml`, Render automatically parses these settings during Blueprint deployment).*
+
+### 3. Model Checkpoints Deployment
+The trained CNN checkpoints are tracked directly in the Git repository under `acl_mri_classification/artifacts/deploy/`:
+- `resnet18.pt` (42.8 MB)
+- `densenet121.pt` (27.2 MB)
+- `efficientnet_b0.pt` (16.2 MB)
+
+During deployment, Render clones these weights automatically; no external S3/GCS bucket setup is required.
+
+### 4. Testing the Deployed Application
+1. **Health Check**:
+   ```bash
+   curl https://<your-render-service>.onrender.com/health
+   ```
+   Verify that response returns `"status": "ready"`, `"model_count": 3`, and `"models_loaded": ["resnet18", "densenet121", "efficientnet_b0"]`.
+2. **Access PACS Interface**:
+   Navigate to `https://<your-render-service>.onrender.com/` in your browser.
+3. **Execute End-to-End Workflow**:
+   - Go to `#workstation`, upload a test `.pck` file or pick an exam from the sample picker.
+   - Click **Run Analysis** to verify multi-model consensus inference.
+   - Toggle **Slice \| Grad-CAM** to verify layer-hook visualization.
+   - Navigate to `#results` to view the decision-support summary and generate findings reports.
+
+---
+
 ## ⚖️ Academic & Clinical Guardrails
 
 1. **Non-Diagnostic Research Tool:** This software is an educational prototype developed for academic coursework in neural networks and deep learning. It has not undergone regulatory clearance (FDA 510(k), CE mark) and must **not** be used for primary patient diagnosis or treatment planning.

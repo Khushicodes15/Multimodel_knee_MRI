@@ -16,6 +16,7 @@ httpx==0.28.1
 # API & Web Service
 fastapi==0.121.0
 uvicorn[standard]==0.38.0
+python-multipart>=0.0.20
 
 # Optional Reporting Components
 openai==2.44.0

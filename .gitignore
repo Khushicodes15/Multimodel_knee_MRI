@@ -24,20 +24,24 @@ env/
 build/
 dist/
 
-# --- Large Model Checkpoints & Raw Data ---
-# Heavy binary model weights
+# --- Model Weights & Checkpoints ---
 *.pt
 *.pth
 *.ckpt
 *.joblib
 *.pkl
 checkpoints/
-acl_mri_classification/artifacts/deploy/
-acl_mri_classification/artifacts/model/
-acl_mri_classification/artifacts/runs/
 knee_deploy/
 
-# Large MRI volumetric archives and raw files
+# Allow specific trained deployment checkpoints
+!acl_mri_classification/artifacts/deploy/resnet18.pt
+!acl_mri_classification/artifacts/deploy/densenet121.pt
+!acl_mri_classification/artifacts/deploy/efficientnet_b0.pt
+!module1_baseline/artifacts/baseline_mlp.joblib
+!module1_baseline/artifacts/baseline_logreg.joblib
+!module4_sequence/artifacts/gru_checkpoint.pt
+
+# --- Datasets & Temporary Uploads ---
 *.pck
 *.npy
 data/KneeMRI/

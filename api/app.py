@@ -12,6 +12,7 @@ import tempfile
 import urllib.error
 import urllib.request
 import uuid
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 
@@ -80,10 +81,19 @@ UPLOAD_CACHE_DIR = Path(tempfile.gettempdir()) / "radvision_uploads"
 UPLOAD_CACHE_DIR.mkdir(parents=True, exist_ok=True)
 UPLOAD_MANIFEST: dict[str, dict[str, Any]] = {}
 
+@asynccontextmanager
+async def lifespan(app_instance: FastAPI):
+    global LOADED_MODELS
+    if not LOADED_MODELS:
+        LOADED_MODELS = discover_and_load_models()
+    yield
+
+
 app = FastAPI(
     title="RadVision ACL — Knee MRI Research Workstation",
     description="Deep Learning Multi-Model Classification & PACS Viewer for Knee MRI",
     version="2.2",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -196,13 +206,14 @@ def discover_and_load_models() -> dict[str, dict[str, Any]]:
     return loaded
 
 
-LOADED_MODELS: dict[str, dict[str, Any]] = {}
+LOADED_MODELS: dict[str, dict[str, Any]] = discover_and_load_models()
 
 
 @app.on_event("startup")
 def startup_event():
     global LOADED_MODELS
-    LOADED_MODELS = discover_and_load_models()
+    if not LOADED_MODELS:
+        LOADED_MODELS = discover_and_load_models()
 
 
 class PredictJSONRequest(BaseModel):
